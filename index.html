@@ -2,17 +2,19 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#1B5E20">
 <title>GPL Representação</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 *{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+#pdfbox,#pdfbox *{-webkit-text-size-adjust:none!important;text-size-adjust:none!important}
 body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#f1f4f1;color:#222}
 .top{background:#1B5E20;color:#fff;padding:10px 14px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:5}
 .top img{height:38px}
-.top .tt{flex:1;min-width:0}.top b{font-size:15px;display:block}.top small{font-size:11px;opacity:.85}
+.top .tt{flex:1;min-width:0}.top b{font-size:15px;display:block}.top small{font-size:11px;opacity:.85;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .st{font-size:11px;padding:3px 9px;border-radius:20px;background:rgba(255,255,255,.18);white-space:nowrap}
 .wrap{max-width:760px;margin:0 auto;padding:10px 12px 90px}
 .card{background:#fff;border:1px solid #e3e8e3;border-radius:14px;padding:12px 14px;margin:10px 0}
@@ -28,9 +30,11 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;bac
 .btn2{background:#E8F5E9;color:#1B5E20;border:1px solid #A5D6A7}
 .btn3{background:#fff;color:#C62828;border:1px solid #ef9a9a}
 .bs{display:inline-flex;align-items:center;gap:5px;background:#E8F5E9;color:#1B5E20;border:1px solid #A5D6A7;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:700;cursor:pointer}
-label{display:block;font-size:11.5px;color:#666;margin-top:9px}
+label{display:block;font-size:11.5px;color:#666;margin-top:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 input,select,textarea{width:100%;border:1px solid #d6d6d6;border-radius:8px;padding:9px;font-size:14px;margin-top:3px;background:#fff;font-family:inherit}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.g2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;align-items:end}.g3{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:8px;align-items:end}
+select{-webkit-appearance:none;appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23555' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 10px center;padding-right:28px}
+input,select{height:42px}textarea{height:auto}
 h3{margin:0 0 6px;font-size:15px;color:#1B5E20}
 .muted{color:#777;font-size:12px}
 .menu{display:grid;grid-template-columns:1fr 1fr;gap:8px}

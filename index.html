@@ -112,6 +112,7 @@ function hoje(){var d=new Date();return d.getFullYear()+'-'+p2(d.getMonth()+1)+'
 function br(iso){return iso?String(iso).substring(8,10)+'/'+String(iso).substring(5,7)+'/'+String(iso).substring(0,4):'—';}
 function somaDias(iso,n){var d=new Date(iso+'T12:00:00');d.setDate(d.getDate()+Math.round(n));return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());}
 function difDias(a,b){return Math.round((new Date(a+'T12:00:00')-new Date(b+'T12:00:00'))/864e5);}
+function mascFone(v){var d=String(v||'').replace(/\D/g,'');if(d.length>11&&d.indexOf('55')===0)d=d.slice(2);d=d.slice(0,11);if(!d)return '';if(d.length<=2)return '('+d;if(d.length<=6)return '('+d.slice(0,2)+') '+d.slice(2);if(d.length<=10)return '('+d.slice(0,2)+') '+d.slice(2,6)+'-'+d.slice(6);return '('+d.slice(0,2)+') '+d.slice(2,7)+'-'+d.slice(7);}
 function toast(t){var e=$('toast');e.textContent=t;e.style.display='block';clearTimeout(toast._t);toast._t=setTimeout(function(){e.style.display='none';},2600);}
 function cli(id){return S.clientes.find(function(c){return String(c.ID)===String(id);})||{};}
 function prod(id){return S.produtos.find(function(p){return String(p.ID)===String(id);})||{ID:id,Nome:id,Saco_kg:30,Dose_Min:100,Dose_Max:100};}
@@ -252,7 +253,7 @@ function vCliente(){
   var h='<button class="back" onclick="go(\'clientes\')">‹ Clientes</button>';
   h+='<div class="card"><h3>'+(novo?'Novo cliente':esc(c.Fazenda||c.Nome))+'</h3>'
    +'<div class="g2"><div><label>Fazenda</label><input id="c-faz" value="'+esc(c.Fazenda)+'"></div><div><label>Proprietário</label><input id="c-nome" value="'+esc(c.Nome)+'"></div></div>'
-   +'<div class="g2"><div><label>Cidade</label><input id="c-cid" value="'+esc(c.Cidade)+'"></div><div><label>WhatsApp</label><input id="c-fone" inputmode="tel" value="'+esc(c.Telefone)+'"></div></div>'
+   +'<div class="g2"><div><label>Cidade</label><input id="c-cid" value="'+esc(c.Cidade)+'"></div><div><label>WhatsApp</label><input id="c-fone" inputmode="tel" maxlength="15" placeholder="(63) 99999-9999" oninput="this.value=mascFone(this.value)" value="'+esc(mascFone(c.Telefone))+'"></div></div>'
    +'<div class="g2"><div><label>Avisar quantos dias antes de acabar</label><input id="c-al" inputmode="numeric" placeholder="'+(num(cfg('Alerta_Dias'))||20)+'" value="'+esc(c.Alerta_Dias)+'"></div><div><label>Observação</label><input id="c-obs" value="'+esc(c.Obs)+'"></div></div>'
    +'<button class="btn" onclick="salvarCliente()">Salvar cliente</button></div>';
   if(novo) return h;

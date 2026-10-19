@@ -501,11 +501,18 @@ function fichaPDF(pid){
    +(f.prec?'<div style="font-size:9px;padding:0 10px 6px;color:'+(/não há/i.test(f.prec)?'#555':'#C62828')+'"><b>Precauções:</b> '+esc(f.prec)+'</div>':'')+'</div>';
 }
 function gerarPDF(html,nome){
-  var box=$('pdfbox'); box.innerHTML='<div style="font-family:Arial,Helvetica,sans-serif;color:#222;width:740px;background:#fff">'+html+'</div>'; box.style.opacity='1'; window.scrollTo(0,0);
   if(typeof html2pdf==='undefined'){alert('Gerador de PDF não carregou (sem internet?).');return;}
-  toast('Gerando PDF…');
-  html2pdf().set({margin:[6,6,10,6],filename:nome,image:{type:'jpeg',quality:0.95},html2canvas:{scale:2,useCORS:true,scrollX:0,scrollY:0},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},pagebreak:{mode:['css','legacy']}})
-    .from(box.firstChild).outputPdf('blob').then(function(b){box.innerHTML='';box.style.opacity='0';abrirPrev(b,nome);}).catch(function(e){box.innerHTML='';box.style.opacity='0';alert('Não consegui gerar o PDF.');});
+  var box=$('pdfbox'), y0=window.scrollY||0;
+  box.innerHTML='<div style="font-family:Arial,Helvetica,sans-serif;color:#222;width:740px;background:#fff">'+html+'</div>'; box.style.opacity='1';
+  window.scrollTo(0,0); toast('Gerando PDF…');
+  var fim=function(){box.innerHTML='';box.style.opacity='0';window.scrollTo(0,y0);};
+  // iPhone: espera a rolagem ir pro topo antes de fotografar (senão sai só um pedaço da página)
+  setTimeout(function(){
+    html2pdf().set({margin:[6,6,10,6],filename:nome,image:{type:'jpeg',quality:0.95},
+      html2canvas:{scale:2,useCORS:true,scrollX:0,scrollY:-(window.scrollY||0),windowWidth:Math.max(document.documentElement.clientWidth,760)},
+      jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},pagebreak:{mode:['css','legacy']}})
+      .from(box.firstChild).outputPdf('blob').then(function(b){fim();abrirPrev(b,nome);}).catch(function(e){fim();alert('Não consegui gerar o PDF.');});
+  },400);
 }
 var PV={blob:null,url:'',nome:''};
 function abrirPrev(blob,nome){ if(PV.url)URL.revokeObjectURL(PV.url); PV={blob:blob,url:URL.createObjectURL(blob),nome:nome};

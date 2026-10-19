@@ -485,14 +485,16 @@ function cabPDF(titulo){
 }
 function fichaPDF(pid){
   var f=fichaDe(pid), p=prod(pid); if(!f.grupos.length&&!f.classif) return '';
-  var tab=f.grupos.map(function(g){return '<div style="break-inside:avoid;margin-top:6px"><div style="background:'+f.cor+';color:#fff;font-weight:700;font-size:11px;padding:3px 8px;border-radius:4px">'+esc(g[0])+'</div><table style="width:100%;border-collapse:collapse;font-size:10.5px">'
-    +g[1].map(function(r,i){return '<tr style="background:'+(i%2?'#fff':'#f5f5f5')+'"><td style="padding:2px 8px">'+esc(r[0])+'</td><td style="padding:2px 8px;text-align:right;font-weight:700">'+esc(r[1])+'</td></tr>';}).join('')+'</table></div>';});
-  var meio=Math.ceil(tab.length/2);
-  return '<div style="break-inside:avoid;margin:14px 0;border:1px solid #ddd;border-radius:8px;overflow:hidden"><div style="background:'+f.fundo+';padding:10px 14px;border-left:6px solid '+f.cor+'">'
-   +'<div style="font-size:15px;font-weight:800;color:'+f.cor+'">'+esc(p.Nome)+' <span style="font-size:11px;color:#555;font-weight:400">'+(f.marca?'· '+esc(f.marca)+' ':'')+'· saco '+fmt(num(p.Saco_kg)||30)+' kg</span></div>'
-   +'<div style="font-size:11px;line-height:1.5;margin-top:4px">'+[['Classificação',f.classif],['Indicação',f.indic],['Modo de usar',f.modo],['Diferenciais',f.dif]].filter(function(x){return x[1];}).map(function(x){return '<b>'+x[0]+':</b> '+esc(x[1]);}).join('<br>')+'</div></div>'
-   +'<div style="display:flex;gap:10px;padding:6px 12px 10px"><div style="flex:1">'+tab.slice(0,meio).join('')+'</div><div style="flex:1">'+tab.slice(meio).join('')+'</div></div>'
-   +(f.prec?'<div style="font-size:10.5px;padding:0 14px 10px;color:'+(/não há/i.test(f.prec)?'#555':'#C62828')+'"><b>Precauções:</b> '+esc(f.prec)+'</div>':'')+'</div>';
+  // ficha compacta: grupos distribuídos em 3 colunas equilibradas, para caber junto do orçamento
+  var cols=[[],[],[]], alt=[0,0,0];
+  f.grupos.forEach(function(g){var k=alt.indexOf(Math.min.apply(null,alt));cols[k].push(g);alt[k]+=g[1].length+1.5;});
+  var tg=function(g){return '<div style="margin-bottom:4px"><div style="background:'+f.cor+';color:#fff;font-weight:700;font-size:9.5px;padding:2px 6px;border-radius:3px">'+esc(g[0])+'</div><table style="width:100%;border-collapse:collapse;font-size:9px">'
+    +g[1].map(function(r,i){return '<tr style="background:'+(i%2?'#fff':'#f3f3f3')+'"><td style="padding:1px 5px">'+esc(r[0])+'</td><td style="padding:1px 5px;text-align:right;font-weight:700;white-space:nowrap">'+esc(r[1])+'</td></tr>';}).join('')+'</table></div>';};
+  return '<div style="break-inside:avoid;margin:8px 0;border:1px solid #ddd;border-radius:6px;overflow:hidden"><div style="background:'+f.fundo+';padding:6px 10px;border-left:5px solid '+f.cor+'">'
+   +'<div style="font-size:13px;font-weight:800;color:'+f.cor+'">'+esc(p.Nome)+' <span style="font-size:10px;color:#555;font-weight:400">'+(f.marca?'· '+esc(f.marca)+' ':'')+'· saco '+fmt(num(p.Saco_kg)||30)+' kg</span></div>'
+   +'<div style="font-size:9.5px;line-height:1.4;margin-top:2px">'+[['Classificação',f.classif],['Indicação',f.indic],['Modo de usar',f.modo],['Diferenciais',f.dif]].filter(function(x){return x[1];}).map(function(x){return '<b>'+x[0]+':</b> '+esc(x[1]);}).join('<br>')+'</div></div>'
+   +'<div style="display:flex;gap:8px;padding:5px 8px 4px">'+cols.filter(function(c){return c.length;}).map(function(c){return '<div style="flex:1">'+c.map(tg).join('')+'</div>';}).join('')+'</div>'
+   +(f.prec?'<div style="font-size:9px;padding:0 10px 6px;color:'+(/não há/i.test(f.prec)?'#555':'#C62828')+'"><b>Precauções:</b> '+esc(f.prec)+'</div>':'')+'</div>';
 }
 function gerarPDF(html,nome){
   var box=$('pdfbox'); box.innerHTML='<div style="font-family:Arial,Helvetica,sans-serif;color:#222;width:740px;background:#fff">'+html+'</div>'; box.style.opacity='1'; window.scrollTo(0,0);

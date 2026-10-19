@@ -493,7 +493,7 @@ function gerarPDF(html,nome){
   var box=$('pdfbox'); box.innerHTML='<div style="font-family:Arial,Helvetica,sans-serif;color:#222;width:740px;background:#fff">'+html+'</div>'; box.style.opacity='1'; window.scrollTo(0,0);
   if(typeof html2pdf==='undefined'){alert('Gerador de PDF não carregou (sem internet?).');return;}
   toast('Gerando PDF…');
-  html2pdf().set({margin:[6,6,10,6],filename:nome,image:{type:'jpeg',quality:0.95},html2canvas:{scale:2,useCORS:true,scrollX:0,scrollY:0,windowWidth:740},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},pagebreak:{mode:['css','legacy']}})
+  html2pdf().set({margin:[6,6,10,6],filename:nome,image:{type:'jpeg',quality:0.95},html2canvas:{scale:2,useCORS:true,scrollX:0,scrollY:0},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},pagebreak:{mode:['css','legacy']}})
     .from(box.firstChild).save().then(function(){box.innerHTML='';box.style.opacity='0';}).catch(function(){box.innerHTML='';box.style.opacity='0';});
 }
 function nomeArq(t){var c=cli(ED.Cliente_ID);return (t+'_'+(c.Fazenda||c.Nome||'cliente')+'_'+br(ED.Data).replace(/\//g,'-')).replace(/[^\wÀ-ú-]+/g,'_')+'.pdf';}
